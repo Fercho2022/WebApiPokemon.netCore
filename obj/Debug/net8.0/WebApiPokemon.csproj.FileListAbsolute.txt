@@ -136,3 +136,5 @@ D:\API-REST-NET\WebApiPokemon\WebApiPokemon\obj\Debug\net8.0\refint\WebApiPokemo
 D:\API-REST-NET\WebApiPokemon\WebApiPokemon\obj\Debug\net8.0\WebApiPokemon.pdb
 D:\API-REST-NET\WebApiPokemon\WebApiPokemon\obj\Debug\net8.0\WebApiPokemon.genruntimeconfig.cache
 D:\API-REST-NET\WebApiPokemon\WebApiPokemon\obj\Debug\net8.0\ref\WebApiPokemon.dll
+D:\API-REST-NET\WebApiPokemon\WebApiPokemon\obj\Debug\net8.0\WebApiPokemon.sourcelink.json
+D:\API-REST-NET\WebApiPokemon\WebApiPokemon\bin\Debug\net8.0\AutoMapper.dll
