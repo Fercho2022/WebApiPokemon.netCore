@@ -37,7 +37,7 @@ namespace WebApiPokemon.Repository
         public ICollection<Pokemon> GetPokemonByAnOwner(int ownerId)
         {
            return _dataContext.PokemonOwners
-                .Include(po => po.Pokemon)
+                
                 .Where(o=>o.Owner.Id==ownerId)  // Filtra por el ID del propietario
                 .Select(o => o.Pokemon)     // Selecciona los Pokémon asociados
                 .ToList();              // Convierte el resultado en una lista

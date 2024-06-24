@@ -23,7 +23,7 @@ namespace WebApiPokemon.Controllers
 
         // GET: api/Owner
         [HttpGet]
-        [ProducesResponseType(200, Type = typeof(IEnumerable<OwnerDto>))]  // Especifica que este endpoint puede devolver un 200 con un IEnumerable<OwnerDto>
+        [ProducesResponseType(200, Type = typeof(IEnumerable<Owner>))]  // Especifica que este endpoint puede devolver un 200 con un IEnumerable<OwnerDto>
         [ProducesResponseType(400)] // Especifica que este endpoint puede devolver un 400
         public IActionResult GetOwners()
         {
@@ -32,13 +32,13 @@ namespace WebApiPokemon.Controllers
                 return BadRequest(ModelState);
 
             var owners = _ownerRepository.GetOwners();  // Obtiene la lista de propietarios del repositorio
-            var ownersDto = _mapper.Map<ICollection<OwnerDto>>(owners); // Mapea la lista de propietarios a una lista de OwnerDto
+            var ownersDto = _mapper.Map<List<OwnerDto>>(owners); // Mapea la lista de propietarios a una lista de OwnerDto
             return Ok(ownersDto);   // Retorna un Ok con la lista de OwnerDto
         }
 
         // GET: api/Owner/5
         [HttpGet("{ownerId}")]
-        [ProducesResponseType(200, Type = typeof(OwnerDto))] // Especifica que este endpoint puede devolver un 200 con un OwnerDto
+        [ProducesResponseType(200, Type = typeof(Owner))] // Especifica que este endpoint puede devolver un 200 con un OwnerDto
         [ProducesResponseType(400)] // Especifica que este endpoint puede devolver un 400
         [ProducesResponseType(404)] // Especifica que este endpoint puede devolver un 404
         public IActionResult GetOwner(int ownerId)
@@ -58,7 +58,7 @@ namespace WebApiPokemon.Controllers
 
         // GET: api/Owner/Pokemon/5
         [HttpGet("Pokemon/{pokeId}")]
-        [ProducesResponseType(200, Type = typeof(IEnumerable<OwnerDto>))]
+        [ProducesResponseType(200, Type = typeof(IEnumerable<Owner>))]
         [ProducesResponseType(400)]
         public IActionResult GetOwnersOfAPokemon(int pokeId)
         {
@@ -66,13 +66,13 @@ namespace WebApiPokemon.Controllers
                 return BadRequest(ModelState);
 
             var owners = _ownerRepository.GetOwnersOfAPokemon(pokeId);
-            var ownersDto = _mapper.Map<ICollection<OwnerDto>>(owners);
+            var ownersDto = _mapper.Map<List<OwnerDto>>(owners);
             return Ok(ownersDto);
         }
 
         // GET: api/Owner/5/Pokemon
         [HttpGet("{ownerId}/Pokemon")]
-        [ProducesResponseType(200, Type = typeof(IEnumerable<PokemonDto>))]
+        [ProducesResponseType(200, Type = typeof(IEnumerable<Pokemon>))]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
         public IActionResult GetPokemonByAnOwner(int ownerId)
@@ -86,7 +86,7 @@ namespace WebApiPokemon.Controllers
             }
 
             var pokemons = _ownerRepository.GetPokemonByAnOwner(ownerId); // Obtiene la lista de Pokémon del propietario con el ID dado
-            var pokemonsDto = _mapper.Map<ICollection<PokemonDto>>(pokemons); // Mapea la lista de Pokémon a una colección de PokemonDto
+            var pokemonsDto = _mapper.Map<List<PokemonDto>>(pokemons); // Mapea la lista de Pokémon a una colección de PokemonDto
             return Ok(pokemonsDto); // Retorna un Ok con la colección de PokemonDto
         }
     }
