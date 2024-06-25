@@ -25,7 +25,11 @@ namespace WebApiPokemon.Controllers
         [ProducesResponseType(400)]
         public IActionResult GetReviews()
         {
-          
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
             var reviewsDto = _mapper.Map<List<ReviewDto>>(_reviewRepository.GetReviews());
             return Ok(reviewsDto);
         }
@@ -37,6 +41,12 @@ namespace WebApiPokemon.Controllers
         [ProducesResponseType(404)]
         public IActionResult GetReview(int reviewId)
         {
+
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
             if (!_reviewRepository.ReviewExists(reviewId))
             {
                 return NotFound();
@@ -53,6 +63,11 @@ namespace WebApiPokemon.Controllers
         [ProducesResponseType(400)]
         public IActionResult GetReviewsByPokemon(int pokeId)
         {
+
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
             var reviews = _reviewRepository.GetReviewsByPokemon(pokeId);
             var reviewsDto = _mapper.Map<ICollection<ReviewDto>>(reviews);
             return Ok(reviewsDto);
@@ -64,8 +79,16 @@ namespace WebApiPokemon.Controllers
         [ProducesResponseType(400)]
         public IActionResult GetReviewsByReviewer(int reviewerId)
         {
+
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
             var reviews = _reviewRepository.GetReviewsByReviewer(reviewerId);
+
             var reviewsDto = _mapper.Map<ICollection<ReviewDto>>(reviews);
+
             return Ok(reviewsDto);
         }
     }
