@@ -22,6 +22,7 @@ namespace WebApiPokemon.Controllers
             _reviewerRepository = reviewerRepository;
         }
 
+        // GET: api/Reviewer
         [HttpGet]
         [ProducesResponseType(200, Type = typeof(IEnumerable<Reviewer>))]
         public IActionResult GetReviewers()
@@ -34,14 +35,15 @@ namespace WebApiPokemon.Controllers
             }
 
 
-            var countriesDto = _mapper.Map<List<CountryDto>>(_countryRepository.GetCountries());
-            return Ok(countriesDto);
+            var reviewersDto = _mapper.Map<List<ReviewerDto>>(_reviewerRepository.GetReviewers());
+            return Ok(reviewersDto);
         }
 
-        [HttpGet("{countryId:int}")]
-        [ProducesResponseType(200, Type = typeof(Country))]
+        // GET: api/Reviewer/{reviewerId}
+        [HttpGet("{reviewerId}")]
+        [ProducesResponseType(200, Type = typeof(Reviewer))]
         [ProducesResponseType(400)]
-        public IActionResult GetPokemon(int countryId)
+        public IActionResult GetReviewer(int reviewerId)
 
         {
             if (!ModelState.IsValid)
@@ -50,48 +52,34 @@ namespace WebApiPokemon.Controllers
 
             }
 
-            if (!_countryRepository.CountryExists(countryId))
+            if (!_reviewerRepository.ReviewerExists(reviewerId))
             {
                 return NotFound();
             }
 
-            var countryDto = _mapper.Map<CountryDto>(_countryRepository.GetCountry(countryId));
+            var reviewerDto = _mapper.Map<ReviewerDto>(_reviewerRepository.GetReviewer(reviewerId));
 
 
-            return Ok(countryDto);
+            return Ok(reviewerDto);
 
         }
-
-        [HttpGet("/country/{ownerId}")]
-        [ProducesResponseType(200, Type = typeof(Country))]
+        // GET: api/Reviewer/{reviewerId}/reviews
+        [HttpGet("{reviewerId}/reviews")]
+        [ProducesResponseType(200, Type = typeof(IEnumerable<Review>))]
         [ProducesResponseType(400)]
-        public IActionResult GetCountryOfAnOwner(int ownerId)
+        public IActionResult GetReviewsByReviewer(int reviewerId)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            var countryDto = _mapper.Map<CountryDto>(_countryRepository.GetCountryByOwner(ownerId));
+            var reviewDtos = _mapper.Map<List<ReviewDto>>(_reviewerRepository.GetReviewsByReviewer(reviewerId));
 
-            return Ok(countryDto);
-
-        }
-
-        [HttpGet("/ownwers/{countryId}")]
-        [ProducesResponseType(200, Type = typeof(IEnumerable<Owner>))]
-        [ProducesResponseType(400)]
-        public IActionResult GetOwnersOfAnCountry(int countryId)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            var ownerDto = _mapper.Map<List<OwnerDto>>(_countryRepository.GetOwnersFromACountry(countryId));
-
-            return Ok(ownerDto);
+            return Ok(reviewDtos);
 
         }
+
+        
     }
 }

@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
+using System.Text.Json.Serialization;
 using WebApiPokemon;
 using WebApiPokemon.Data;
 using WebApiPokemon.Interfaces;
@@ -65,6 +66,15 @@ builder.Services.AddControllers();
 
 builder.Services.AddTransient<Seed>();
 
+// se usa para evitar problemas con ciclos de referencia durante la serialización JSON
+// en tu aplicación ASP.NET Core, lo cual es útil para evitar excepciones y mejorar el
+// rendimiento.
+
+builder.Services.AddControllers().AddJsonOptions(options =>
+{
+    options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+});
+
 // builder.Services: Se refiere al contenedor de servicios utilizado
 // para registrar dependencias en una aplicación ASP.NET Core.
 
@@ -100,6 +110,7 @@ builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
 builder.Services.AddScoped<ICountryRepository, CountryRepository>();
 builder.Services.AddScoped<IOwnerRepository, OwnerRepository>();
 builder.Services.AddScoped<IReviewRepository, ReviewRepository>();
+builder.Services.AddScoped<IReviewerRepository, ReviewerRepository>();
 //
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();

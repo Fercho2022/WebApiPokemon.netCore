@@ -4,7 +4,7 @@ namespace WebApiPokemon.Interfaces
 {
     public interface IPokemonRepository
     {
-         ICollection<Pokemon> GetPokemons();
+        ICollection<Pokemon> GetPokemons();
 
         Pokemon GetPokemon(int id);
 
@@ -13,6 +13,8 @@ namespace WebApiPokemon.Interfaces
         decimal GetPokemonRating(int pokeId);
 
         bool PokemonExists(int pokeId);
+
+
 
 
 

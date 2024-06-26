@@ -1,4 +1,5 @@
-﻿using WebApiPokemon.Data;
+﻿using Microsoft.EntityFrameworkCore;
+using WebApiPokemon.Data;
 using WebApiPokemon.Interfaces;
 using WebApiPokemon.Models;
 
@@ -15,7 +16,7 @@ namespace WebApiPokemon.Repository
         }
         public Reviewer GetReviewer(int reviewerId)
         {
-           return _dataContext.Reviewers.FirstOrDefault(r=>r.Id == reviewerId);
+           return _dataContext.Reviewers.Where(r=>r.Id == reviewerId).Include(r=>r.Reviews).FirstOrDefault();
         }
 
         public ICollection<Reviewer> GetReviewers()

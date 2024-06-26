@@ -126,5 +126,9 @@ namespace WebApiPokemon.Controllers
             var rating = _pokemonRepository.GetPokemonRating(pokeId);
             return Ok(rating);
         }
+
+        [HttpPost]
+        public IActionResult Create
+
     }
 }
