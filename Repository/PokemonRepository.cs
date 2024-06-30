@@ -48,5 +48,54 @@ namespace WebApiPokemon.Repository
         {
             return _context.Pokemon.Any(p => p.Id == pokeId);
         }
+
+        public bool CreatePokemon(int ownerId, int categoryId, Pokemon pokemon)
+        {
+           var OwnerEntity= _context.Owners.Where(o=>o.Id==ownerId).FirstOrDefault();
+            var CategoryEntity=_context.Categories.Where(c=>c.Id==categoryId).FirstOrDefault();
+
+
+            // Verificar si el propietario y la categoría existen
+            if (OwnerEntity == null || CategoryEntity == null)
+            {
+                return false; // Retornar falso si no se encuentran
+            }
+
+            // Crear la relación entre Pokémon y Propietario
+            var pokemonOwner = new PokemonOwner()
+            {
+
+                Owner = OwnerEntity,
+                Pokemon = pokemon,
+            };
+
+            // rastrear esta nueva entidad pokemonOwner para que pueda ser insertada en la base de datos
+            // cuando se llame a SaveChanges() en el contexto _context.
+
+            _context.Add(pokemonOwner);
+
+            var pokemonCategory = new PokemonCategory()
+            {
+                Pokemon = pokemon,
+                Category = CategoryEntity
+            };
+
+            // rastrear esta nueva entidad pokemonCategory para que pueda ser insertada en la base de datos
+            // cuando se llame a SaveChanges() en el contexto _context.
+            _context.Add(pokemonCategory);
+
+            // rastrear esta nueva entidad pokemon para que pueda ser insertada en la base de datos
+            // cuando se llame a SaveChanges() en el contexto _context.
+
+            _context.Add(pokemon);
+
+            return Save();
+        }
+
+        public bool Save()
+        {
+            var saved=_context.SaveChanges();
+            return saved > 0 ? true : false;
+        }
     }
 }

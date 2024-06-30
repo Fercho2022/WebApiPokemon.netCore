@@ -12,5 +12,9 @@ namespace WebApiPokemon.Interfaces
         bool ReviewExists(int reviewId);
         ICollection<Review> GetReviewsByPokemon(int pokeId);
         ICollection<Review> GetReviewsByReviewer(int reviewerId);
+
+        bool CreateReview(Review review);
+
+        bool Save();
     }
 }

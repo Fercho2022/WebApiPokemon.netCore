@@ -39,5 +39,17 @@ namespace WebApiPokemon.Repository
         {
            return  _context.Reviews.Where(r=>r.Reviewer.Id == reviewerId).ToList();
         }
+
+        public bool CreateReview(Review reviewId)
+        {
+            _context.Add(reviewId);
+            return Save();
+        }
+
+        public bool Save()
+        {
+            var saved = _context.SaveChanges();
+            return saved > 0 ? true : false;
+        }
     }
 }
