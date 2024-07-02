@@ -92,7 +92,7 @@ namespace WebApiPokemon.Controllers
         [ProducesResponseType(204)]
         [ProducesResponseType(400)]
 
-        public IActionResult CreateCountry([FromQuery] int countryId, [FromBody] OwnerDto ownerCreate)
+        public IActionResult CreateOwner([FromQuery] int countryId, [FromBody] OwnerDto ownerCreate)
         {
             if (ownerCreate == null)
                 return BadRequest(ModelState);
@@ -123,6 +123,37 @@ namespace WebApiPokemon.Controllers
             }
 
             return Ok("Successfully created");
+        }
+
+        [HttpPut("{ownerId}")]
+        [ProducesResponseType(400)]   // 400 es un Bad Request
+        [ProducesResponseType(204)]    // 204 es un No Content
+        [ProducesResponseType(404)]     // 404 es un not found
+        public IActionResult UpdateOwner([FromBody] OwnerDto ownerUpdate, int ownerId)
+        {
+            if (ownerUpdate == null)
+                return BadRequest(ModelState);
+
+            if (ownerId != ownerUpdate.Id)
+                return BadRequest(ModelState);
+
+            if (!_ownerRepository.OwnerExists(ownerId))
+                return NotFound();
+
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var ownerMap = _mapper.Map<Owner>(ownerUpdate);
+
+            if (!_ownerRepository.UpdateOwner(ownerMap))
+            {
+                ModelState.AddModelError("", "Something went wrong updating owner");
+                return StatusCode(500, ModelState);
+
+            }
+
+            return Ok();
+
         }
 
 

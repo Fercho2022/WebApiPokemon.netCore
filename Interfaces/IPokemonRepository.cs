@@ -16,6 +16,8 @@ namespace WebApiPokemon.Interfaces
 
         bool CreatePokemon(int ownerId, int categoryId, Pokemon pokemon);
 
+        bool UpdatePokemon(Pokemon pokemon);
+
         bool Save();
 
 

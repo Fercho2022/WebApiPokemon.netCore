@@ -17,6 +17,8 @@ namespace WebApiPokemon.Interfaces
 
         bool CreateOwner(Owner owner);
 
+        bool UpdateOwner(Owner owner);
+
         bool Save();
 
 

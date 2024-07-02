@@ -127,5 +127,36 @@ namespace WebApiPokemon.Controllers
 
             return Ok("Successfully created");
         }
+
+        [HttpPut("{countryId}")]
+        [ProducesResponseType(400)]   // 400 es un Bad Request
+        [ProducesResponseType(204)]    // 204 es un No Content
+        [ProducesResponseType(404)]     // 404 es un not found
+        public IActionResult UpdateCountry([FromBody] CountryDto countryUpdate, int countryId)
+        {
+            if (countryUpdate == null)
+                return BadRequest(ModelState);
+
+            if (countryId != countryUpdate.Id)
+                return BadRequest(ModelState);
+
+            if (!_countryRepository.CountryExists(countryId))
+                return NotFound();
+
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var countryMap = _mapper.Map<Country>(countryUpdate);
+
+            if (!_countryRepository.UpdateCountry(countryMap))
+            {
+                ModelState.AddModelError("", "Something went wrong updating country");
+                return StatusCode(500, ModelState);
+
+            }
+
+            return Ok();
+
+        }
     }
 }

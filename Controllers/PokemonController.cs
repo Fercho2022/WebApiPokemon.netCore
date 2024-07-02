@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using WebApiPokemon.Dto;
 using WebApiPokemon.Interfaces;
 using WebApiPokemon.Models;
+using WebApiPokemon.Repository;
 
 
 
@@ -158,6 +159,37 @@ namespace WebApiPokemon.Controllers
                 return Ok("Successfully created");
             }
 
+        [HttpPut("{pokeId}")]
+        [ProducesResponseType(400)]   // 400 es un Bad Request
+        [ProducesResponseType(204)]    // 204 es un No Content
+        [ProducesResponseType(404)]     // 404 es un not found
+        public IActionResult UpdatePokemon([FromBody] PokemonDto pokemonUpdate, 
+            int pokeId)
+        {
+            if (pokemonUpdate == null)
+                return BadRequest(ModelState);
+
+            if (pokeId != pokemonUpdate.Id)
+                return BadRequest(ModelState);
+
+            if (!_pokemonRepository.PokemonExists(pokeId))
+                return NotFound();
+
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var pokemonMap = _mapper.Map<Pokemon>(pokemonUpdate);
+
+            if (!_pokemonRepository.UpdatePokemon(pokemonMap))
+            {
+                ModelState.AddModelError("", "Something went wrong updating owner");
+                return StatusCode(500, ModelState);
+
+            }
+
+            return Ok(pokemonUpdate);
 
         }
+
+    }
     }

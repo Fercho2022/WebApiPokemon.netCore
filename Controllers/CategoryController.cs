@@ -36,7 +36,7 @@ namespace WebApiPokemon.Controllers
 
         [HttpGet("{categoryId}")]
         [ProducesResponseType(200, Type = typeof(Category))]
-        [ProducesResponseType(400)]
+        [ProducesResponseType(400)]    // (400 es un Bad Request)
         public IActionResult GetCategory(int categoryId)
         {
             if (!_categoryRepository.CategoryExists(categoryId))
@@ -52,7 +52,7 @@ namespace WebApiPokemon.Controllers
 
         [HttpGet("pokemon/{categoryId}")]
         [ProducesResponseType(200, Type = typeof(IEnumerable<Pokemon>))]
-        [ProducesResponseType(400)]
+        [ProducesResponseType(400)]   // (400 es un Bad Request)
         public IActionResult GetPokemonByCategoryId(int categoryId)
         {
             var pokemons = _mapper.Map<List<PokemonDto>>(
@@ -66,7 +66,7 @@ namespace WebApiPokemon.Controllers
 
         [HttpPost]
         [ProducesResponseType(204)]
-        [ProducesResponseType(400)]
+        [ProducesResponseType(400)] // (400 es un Bad Request)
 
         public IActionResult CreateCategory([FromBody] CategoryDto categoryCreate)
         {
@@ -94,11 +94,40 @@ namespace WebApiPokemon.Controllers
 
             return Ok("Successfully created");
 
-
-
-        
-        
+     
         
         }
+
+        [HttpPut("{categoryId}")]
+        [ProducesResponseType(400)]   // 400 es un Bad Request
+        [ProducesResponseType(204)]    // 204 es un No Content
+        [ProducesResponseType(404)]     // 404 es un not found
+        public IActionResult UpdateCategory([FromBody] CategoryDto categoryUpdate, int categoryId)
+        { 
+            if (categoryUpdate== null)
+                return BadRequest(ModelState);
+
+            if(categoryId!=categoryUpdate.Id)
+                return BadRequest(ModelState);
+
+            if(!_categoryRepository.CategoryExists(categoryId))
+                return NotFound();
+
+            if(!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var categoryMap=_mapper.Map<Category>(categoryUpdate);
+
+            if (!_categoryRepository.UpdateCategory(categoryMap))
+            {
+                ModelState.AddModelError("", "Something went wrong updating category");
+                return StatusCode(500, ModelState);
+
+            }
+
+            return NoContent();
+
+        }
+
     }
 }
