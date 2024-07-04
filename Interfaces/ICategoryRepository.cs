@@ -17,5 +17,7 @@ namespace WebApiPokemon.Interfaces
         bool Save();
 
         bool UpdateCategory(Category category);
+
+        bool DeleteCategory(Category category);
     }
 }

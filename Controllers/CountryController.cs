@@ -158,5 +158,35 @@ namespace WebApiPokemon.Controllers
             return Ok();
 
         }
+
+        [HttpDelete("{countryId}")]
+        [ProducesResponseType(400)]   // 400 es un Bad Request
+        [ProducesResponseType(204)]    // 204 es un No Content
+        [ProducesResponseType(404)]     // 404 es un not found
+
+        public IActionResult DeleteCountry(int countryId)
+        {
+
+            if (!_countryRepository.CountryExists(countryId))
+            {
+                return NotFound();
+
+
+            }
+            var countryToDelete = _countryRepository.GetCountry(countryId);
+
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            if (!_countryRepository.DeleteCountry(countryToDelete))
+            {
+
+                ModelState.AddModelError("", "Something went wrong deleting country");
+                return StatusCode(500, ModelState);
+            }
+
+            return NoContent();
+
+        }
     }
 }

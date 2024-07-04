@@ -119,6 +119,66 @@ namespace WebApiPokemon.Controllers
             return Ok("Successfully created");
         }
 
+        [HttpPut("{reviewerId}")]
+        [ProducesResponseType(400)]   // 400 es un Bad Request
+        [ProducesResponseType(204)]    // 204 es un No Content
+        [ProducesResponseType(404)]     // 404 es un not found
+        public IActionResult UpdateReviewerr([FromBody] ReviewerDto reviewerUpdate, int reviewerId)
+        {
+            if (reviewerUpdate == null)
+                return BadRequest(ModelState);
 
+            if (reviewerId != reviewerUpdate.Id)
+                return BadRequest(ModelState);
+
+            if (!_reviewerRepository.ReviewerExists(reviewerId))
+                return NotFound();
+
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var reviewerMap = _mapper.Map<Reviewer>(reviewerUpdate);
+
+            if (!_reviewerRepository.UpdateReviewer(reviewerMap))
+            {
+                ModelState.AddModelError("", "Something went wrong updating owner");
+                return StatusCode(500, ModelState);
+
+            }
+
+            return Ok();
+
+        }
+
+        [HttpDelete("{reviewerId}")]
+        [ProducesResponseType(400)]   // 400 es un Bad Request
+        [ProducesResponseType(204)]    // 204 es un No Content
+        [ProducesResponseType(404)]     // 404 es un not found
+
+        public IActionResult DeleteReview(int reviewerId)
+        {
+
+            if (!_reviewerRepository.ReviewerExists(reviewerId))
+            {
+                return NotFound();
+
+            }
+
+            var reviewerToDelete = _reviewerRepository.GetReviewer(reviewerId);
+
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            if (!_reviewerRepository.DeleteReviewer(reviewerToDelete))
+            {
+
+                ModelState.AddModelError("", "Something went wrong deleting reviewer");
+                return StatusCode(500, ModelState);
+            }
+
+
+            return NoContent();
+
+        }
     }
 }

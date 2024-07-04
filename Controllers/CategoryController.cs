@@ -73,15 +73,15 @@ namespace WebApiPokemon.Controllers
             if (categoryCreate == null)
                 return BadRequest(ModelState);
 
-            var category= _categoryRepository.GetCategories().Where(c=>c.Name.Trim().ToUpper()==categoryCreate.Name.TrimEnd().ToUpper()).FirstOrDefault();
-        
-        if(category != null)
+            var category = _categoryRepository.GetCategories().Where(c => c.Name.Trim().ToUpper() == categoryCreate.Name.TrimEnd().ToUpper()).FirstOrDefault();
+
+            if (category != null)
             {
                 ModelState.AddModelError("", "Category already exist");
                 return StatusCode(422, ModelState);
             }
 
-        if(!ModelState.IsValid) 
+            if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
             var categoryMap = _mapper.Map<Category>(categoryCreate);
@@ -94,8 +94,8 @@ namespace WebApiPokemon.Controllers
 
             return Ok("Successfully created");
 
-     
-        
+
+
         }
 
         [HttpPut("{categoryId}")]
@@ -103,20 +103,20 @@ namespace WebApiPokemon.Controllers
         [ProducesResponseType(204)]    // 204 es un No Content
         [ProducesResponseType(404)]     // 404 es un not found
         public IActionResult UpdateCategory([FromBody] CategoryDto categoryUpdate, int categoryId)
-        { 
-            if (categoryUpdate== null)
+        {
+            if (categoryUpdate == null)
                 return BadRequest(ModelState);
 
-            if(categoryId!=categoryUpdate.Id)
+            if (categoryId != categoryUpdate.Id)
                 return BadRequest(ModelState);
 
-            if(!_categoryRepository.CategoryExists(categoryId))
+            if (!_categoryRepository.CategoryExists(categoryId))
                 return NotFound();
 
-            if(!ModelState.IsValid)
+            if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var categoryMap=_mapper.Map<Category>(categoryUpdate);
+            var categoryMap = _mapper.Map<Category>(categoryUpdate);
 
             if (!_categoryRepository.UpdateCategory(categoryMap))
             {
@@ -129,5 +129,31 @@ namespace WebApiPokemon.Controllers
 
         }
 
+        [HttpDelete("{cateoryId}")]
+        [ProducesResponseType(400)]   // 400 es un Bad Request
+        [ProducesResponseType(204)]    // 204 es un No Content
+        [ProducesResponseType(404)]     // 404 es un not found
+
+        public IActionResult DeleteCategory(int categoryId) {
+
+            if (!_categoryRepository.CategoryExists(categoryId)) {
+                return NotFound();
+
+
+            }
+            var categoryToDelete=_categoryRepository.GetCategory(categoryId);
+
+            if(!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            if(!_categoryRepository.DeleteCategory(categoryToDelete)) {
+
+                ModelState.AddModelError("", "Something went wrong deleting category");
+                return StatusCode(500, ModelState);
+            }
+
+            return NoContent();
+        
+        }
     }
 }

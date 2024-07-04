@@ -42,6 +42,13 @@ namespace WebApiPokemon.Data
                     .HasOne(p => p.Owner)
                     .WithMany(pc => pc.PokemonOwners)
                     .HasForeignKey(c => c.OwnerId);
+
+            modelBuilder.Entity<Country>()
+                    .HasMany(c => c.Owners)
+                    .WithOne(o => o.Country)
+                    .OnDelete(DeleteBehavior.Cascade);
+        
+
         }
     }
 }

@@ -156,7 +156,35 @@ namespace WebApiPokemon.Controllers
 
         }
 
+        [HttpDelete("{ownerId}")]
+        [ProducesResponseType(400)]   // 400 es un Bad Request
+        [ProducesResponseType(204)]    // 204 es un No Content
+        [ProducesResponseType(404)]     // 404 es un not found
 
+        public IActionResult DeleteCountry(int ownerId)
+        {
+
+            if (!_ownerRepository.OwnerExists(ownerId))
+            {
+                return NotFound();
+
+
+            }
+            var ownerToDelete = _ownerRepository.GetOwner(ownerId);
+
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            if (!_ownerRepository.DeleteOwner(ownerToDelete))
+            {
+
+                ModelState.AddModelError("", "Something went wrong deleting owner");
+                return StatusCode(500, ModelState);
+            }
+
+            return NoContent();
+
+        }
     }
 
 
